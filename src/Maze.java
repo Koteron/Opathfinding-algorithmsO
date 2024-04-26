@@ -1,10 +1,11 @@
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Stack;
 import java.util.concurrent.ArrayBlockingQueue;
 
-public final class Labyrinth
+public final class Maze
 {
-    private static Labyrinth INSTANCE;
+    private static Maze INSTANCE;
     private Node[][] grid = null;
     private int size_x = 0;
     private int size_y = 0;
@@ -15,12 +16,12 @@ public final class Labyrinth
     public static final int DIAGONAL_MOVEMENT_COST = 14;
     public static final int COMMON_MOVEMENT_COST = 10;
 
-    private Labyrinth() {}
-    public static Labyrinth getInstance()
+    private Maze() {}
+    public static Maze getInstance()
     {
         if (INSTANCE == null)
         {
-            INSTANCE = new Labyrinth();
+            INSTANCE = new Maze();
         }
         return INSTANCE;
     }
@@ -46,14 +47,42 @@ public final class Labyrinth
                 grid[i][j] = new Node();
                 grid[i][j].setY(i);
                 grid[i][j].setX(j);
-                if (Math.random() < 0.1)
+                if (i % 2 == 1 || j % 2 == 1)
                 {
                     grid[i][j].setObstacle(true);
                 }
             }
         }
-
-        // Here should be some obstacle generation algorithms
+        ArrayList<Node> openCells = new ArrayList<>();
+        ArrayList<Node> visitedCells = new ArrayList<>();
+        openCells.add(grid[(int) (Math.round(Math.random()*Math.nextUp((double)size_y / 2))*2)]
+                [(int)(Math.round(Math.random()*Math.nextUp((double)size_x / 2))*2)]);
+        while (!openCells.isEmpty())
+        {
+            Node current = openCells.get((int) Math.round(Math.random()*(openCells.size()-1)));
+            boolean foundUnvisitedNeighbour = false;
+            for (int Y = -2; Y <= 2 && !foundUnvisitedNeighbour; Y += 2)
+            {
+                for (int X = -2; X <= 2 && !foundUnvisitedNeighbour; X += 2)
+                {
+                    if (current.getX() + X >= size_x || current.getY() + Y >= size_y ||
+                            current.getX() + X < 0 || current.getY() + Y < 0 ||
+                            visitedCells.contains(grid[current.getY() + Y][current.getX() + X]) ||
+                            X != 0 && Y != 0)
+                    {
+                        continue;
+                    }
+                    grid[current.getY() + Y/2][current.getX() + X/2].setObstacle(false);
+                    openCells.add(grid[current.getY() + Y][current.getX() + X]);
+                    visitedCells.add(grid[current.getY() + Y][current.getX() + X]);
+                    foundUnvisitedNeighbour = true;
+                }
+            }
+            if (!foundUnvisitedNeighbour)
+            {
+                openCells.remove(current);
+            }
+        }
 
         boolean nodeSet = false;
         while (!nodeSet)
@@ -100,7 +129,7 @@ public final class Labyrinth
                 }
                 else if (node.isObstacle())
                 {
-                    System.out.print('O');
+                    System.out.print('+');
                 }
                 else if (foundPath.contains(node))
                 {
@@ -108,7 +137,7 @@ public final class Labyrinth
                 }
                 else
                 {
-                    System.out.print('-');
+                    System.out.print(' ');
                 }
                 System.out.print("  ");
             }

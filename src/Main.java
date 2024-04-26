@@ -1,10 +1,13 @@
 public class Main
 {
-    private static void traverseLabyrinth(Labyrinth labyrinth, TraversalMethod method, boolean clearNodes)
+    static final int MAZE_SIZE_X = 21;
+    static final int MAZE_SIZE_Y = 21;
+
+    private static void traverseLabyrinth(Maze maze, TraversalMethod method, boolean clearNodes)
     {
         if (clearNodes)
         {
-            labyrinth.clearNodeValues();
+            maze.clearNodeValues();
         }
         System.out.println("___________________");
         System.out.println("Traversing with " + method);
@@ -12,27 +15,28 @@ public class Main
         long startTime = System.nanoTime();
         switch (method)
         {
-            case A_STAR -> labyrinth.traverseAStar();
-            case DIJKSTRA -> labyrinth.traverseDijkstra();
-            case DFS -> labyrinth.traverseDFS();
-            case BFS -> labyrinth.traverseBFS();
-            case GREEDY -> labyrinth.traverseGreedy();
+            case A_STAR -> maze.traverseAStar();
+            case DIJKSTRA -> maze.traverseDijkstra();
+            case DFS -> maze.traverseDFS();
+            case BFS -> maze.traverseBFS();
+            case GREEDY -> maze.traverseGreedy();
         }
         long endTime = System.nanoTime();
-        labyrinth.printGrid();
-        System.out.println("Path length: " + labyrinth.getPathLength());
+        maze.printGrid();
+        System.out.println("Path length: " + maze.getPathLength());
         System.out.println(method + " took " + (endTime - startTime) + " nanoseconds");
     }
 
     public static void main(String[] args)
     {
-        Labyrinth labyrinth = Labyrinth.getInstance();
-        labyrinth.generateLabyrinth(10, 10);
-        labyrinth.printGrid();
-        traverseLabyrinth(labyrinth, TraversalMethod.A_STAR, false);
-        traverseLabyrinth(labyrinth, TraversalMethod.DIJKSTRA, true);
-        traverseLabyrinth(labyrinth, TraversalMethod.GREEDY, true);
-        traverseLabyrinth(labyrinth, TraversalMethod.DFS, true);
-        traverseLabyrinth(labyrinth, TraversalMethod.BFS, true);
+        Maze maze = Maze.getInstance();
+        maze.generateLabyrinth(MAZE_SIZE_X, MAZE_SIZE_Y);
+        maze.printGrid();
+        System.out.println();
+        traverseLabyrinth(maze, TraversalMethod.A_STAR, false);
+        traverseLabyrinth(maze, TraversalMethod.DIJKSTRA, true);
+        traverseLabyrinth(maze, TraversalMethod.GREEDY, true);
+        traverseLabyrinth(maze, TraversalMethod.DFS, true);
+        traverseLabyrinth(maze, TraversalMethod.BFS, true);
     }
 }
