@@ -1,7 +1,7 @@
 public class Main
 {
-    static final int MAZE_SIZE_X = 21;
-    static final int MAZE_SIZE_Y = 21;
+    static final int MAZE_SIZE_X = 31;
+    static final int MAZE_SIZE_Y = 31;
 
     private static void traverseLabyrinth(Maze maze, TraversalMethod method, boolean clearNodes)
     {

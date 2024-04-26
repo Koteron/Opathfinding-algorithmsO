@@ -1,4 +1,3 @@
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Stack;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -39,6 +38,8 @@ public final class Maze
         size_x = x;
         size_y = y;
 
+        // Creating the grid
+
         for (int i = 0; i < size_y; ++i)
         {
             grid[i] = new Node[size_x];
@@ -53,6 +54,9 @@ public final class Maze
                 }
             }
         }
+
+        // Generating the maze with Growing Tree algorithm
+
         ArrayList<Node> openCells = new ArrayList<>();
         ArrayList<Node> visitedCells = new ArrayList<>();
         openCells.add(grid[(int) (Math.round(Math.random()*Math.nextUp((double)size_y / 2))*2)]
@@ -83,6 +87,8 @@ public final class Maze
                 openCells.remove(current);
             }
         }
+
+        // Placing target and start points at least half of the grid from each other
 
         boolean nodeSet = false;
         while (!nodeSet)
